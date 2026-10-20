@@ -1,64 +1,237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1D2B4F">
-<meta name="robots" content="noindex">
-<title>Emaus – adresă nouă</title>
-<link rel="canonical" href="https://aplicatia-emaus.github.io/app/">
-<!--
-  Vechea adresă a aplicației (fosta „Caiet de ucenicie”). Aplicația se numește acum Emaus și stă la
-  https://aplicatia-emaus.github.io/app/. Pagina aceasta:
-    1. oprește notificările legate de vechea adresă (altfel ar veni de două ori, după ce le pornești în Emaus);
-    2. scoate vechiul Service Worker;
-    3. trimite automat la noua adresă.
--->
-<style>
-  :root { --bg: #E8ECF2; --card: #FCFDFE; --ink: #1D2B4F; --ink2: #4A5672; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #0F1626; --card: #161F33; --ink: #E3E8F1; --ink2: #A9B3C7; } }
-  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font: 17px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; }
-  main { max-width: 440px; margin: 0 auto; padding: 48px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  svg { width: 96px; height: 96px; }
-  h1 { margin: 0; font-size: 1.5rem; }
-  p { margin: 0; color: var(--ink2); }
-  a.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 28px; border-radius: 999px; background: #1D2B4F; color: #fff; font-weight: 700; text-decoration: none; }
-  @media (prefers-color-scheme: dark) { a.btn { background: #D6E0F5; color: #0F1626; } }
-  .card { background: var(--card); border-radius: 16px; padding: 16px 18px; text-align: left; }
-  .card p + p { margin-top: 8px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1D2B4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Emaus">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Emaus</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" id="fav" type="image/png" href="favicon-64.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!--
+    Pagina-ramă a aplicației „Emaus” (Biserica Betel Constanța).
+    Deschide aplicația Google Apps Script pe tot ecranul și afișează numărul noutăților (mesaje, cereri, invitații):
+      - în titlul filei: „(3) Emaus”;
+      - pe favicon (iconița filei), cu o bulină roșie;
+      - pe iconița aplicației instalate (setAppBadge): iPhone / iPad 16.4+ cu notificări permise, Windows / macOS;
+      - prin notificări push (sw.js), și cu aplicația închisă: pe iPhone cifră pe iconiță, pe Android bulină pe iconiță.
+    Aplicația trimite doar numere și cheia publică de notificări (postMessage); rama acceptă mesaje numai de la cadrul ei.
+
+    ► SINGURA SETARE: adresa aplicației (linkul /exec din Apps Script → Implementare → Gestionează implementările).
+    Fișiere: index.html, sw.js, manifest.webmanifest, iconițele (icon-192/512, icon-maskable-512, apple-touch-icon,
+    favicon-64, badge-96 – iconița albă, transparentă, din bara de notificări Android).
+  -->
+  <style>
+    html, body { margin: 0; height: 100%; background: #1D2B4F; overflow: hidden; }
+    #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #E8ECF2; }
+    #bar { position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 2; display: flex; align-items: center; gap: 8px;
+      max-width: 560px; margin: 0 auto;
+      padding: 10px 12px; border-radius: 14px; background: #1D2B4F; color: #fff; font: 15px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+    #bar p { margin: 0; flex: 1; }
+    #bar button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; font: inherit; font-weight: 700; cursor: pointer; }
+    #bar .ok { background: #8DBB6E; color: #10200A; }
+    #bar .x { background: transparent; color: #fff; padding: 0 10px; }
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body>
-<main>
-  <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1D2B4F"/><path d="M32 40V25" stroke="#8DBB6E" stroke-width="3.2" stroke-linecap="round"/><path d="M32 29c-7.5 0-12.5-5-12.5-12.5C27 16.5 32 21.5 32 29z" fill="#8DBB6E"/><path d="M32 24c6.5 0 12.5-4.5 12.5-12.5C37.5 11.5 32 16 32 24z" fill="#8DBB6E"/><path d="M7 37c8-3.5 17-3.5 25 2v9c-8-5.5-17-5.5-25-2z" fill="#FCFDFE"/><path d="M57 37c-8-3.5-17-3.5-25 2v9c8-5.5 17-5.5 25-2z" fill="#FCFDFE"/><path d="M30.6 48.4C27 50.8 22.6 53.2 23.4 56.7C24.2 60.2 31 60.8 33 64H47.5C45 59.2 36.6 58.1 31.6 56.2C28 54.9 31 51.9 33.4 48.4z" fill="#D9C29A"/></svg>
-  <h1>Caietul de ucenicie se numește acum Emaus</h1>
-  <p id="st">Te ducem la noua adresă…</p>
-  <a class="btn" href="https://aplicatia-emaus.github.io/app/">Deschide Emaus</a>
-  <div class="card">
-    <p><strong>Contul și tot ce ai scris rămân.</strong> Intri cu aceleași date.</p>
-    <p>Dacă aveai aplicația pe ecranul telefonului, adaug-o din nou de la noua adresă (Android: meniul ⋮ → „Instalează aplicația”; iPhone: Distribuie → „Adaugă pe ecranul principal”), apoi șterge iconița veche. Notificările le pornești din nou în Emaus.</p>
+  <iframe id="app" title="Emaus" allow="geolocation; clipboard-read; clipboard-write; web-share; fullscreen; autoplay"></iframe>
+  <div id="bar" role="region" aria-label="Notificări" hidden>
+    <p>Vrei o notificare și cifra pe iconiță când ai mesaje noi?</p>
+    <button class="ok" type="button" id="bar-ok">Permite</button>
+    <button class="x" type="button" id="bar-x" aria-label="Nu acum">✕</button>
   </div>
-</main>
+  <div id="help" role="alert" hidden style="position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top, 0px));z-index:3;max-width:560px;margin:0 auto;padding:12px 14px;border-radius:14px;background:#fff;color:#1D2B4F;font:15px/1.4 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.3)">
+    <p style="margin:0 0 10px">Aplicația se încarcă greu sau Google a afișat o eroare.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" id="help-retry" style="min-height:44px;padding:0 16px;border:0;border-radius:999px;background:#1D2B4F;color:#fff;font:inherit;font-weight:700">Reîncearcă</button>
+      <a id="help-open" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid #1D2B4F;color:#1D2B4F;font-weight:700;text-decoration:none">Deschide direct</a>
+    </div>
+  </div>
+  <noscript><p style="color:#fff;padding:24px">Aplicația are nevoie de JavaScript activat.</p></noscript>
 <script>
 (function () {
   'use strict';
-  var NOU = 'https://aplicatia-emaus.github.io/app/';
-  var st = document.getElementById('st');
-  // 1–2: oprim abonamentul push al vechii adrese și scoatem Service Worker-ul ei (serverul șterge singur abonamentele moarte)
-  var curat = !('serviceWorker' in navigator) ? Promise.resolve() :
-    navigator.serviceWorker.getRegistrations().then(function (regs) {
-      return Promise.all(regs.map(function (r) {
-        var p = r.pushManager ? r.pushManager.getSubscription().then(function (s) { return s && s.unsubscribe(); }).catch(function () {}) : Promise.resolve();
-        return p.then(function () { return r.unregister(); }).catch(function () {});
-      }));
+  // ► Adresa aplicației (linkul /exec). Înlocuiește cu linkul vostru:
+  var APP_URL = 'https://script.google.com/macros/s/INLOCUIESTE_CU_ID-UL_IMPLEMENTARII/exec';
+
+  // Linkul copiat din bara browserului poate conține contul Google („/macros/u/1/s/…”): îl curățăm.
+  // Cu implementarea „Oricine” (fără cont Google), adresa curată se deschide pe orice telefon, cu oricâte conturi.
+  APP_URL = APP_URL.replace(/\/macros\/u\/\d+\/s\//, '/macros/s/');
+
+  var TITLE = 'Emaus';
+  var GOOGLE = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;   // de aici vine aplicația (cadrul Apps Script)
+  var frame = document.getElementById('app');
+  frame.src = APP_URL;
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* stocare indisponibilă */ } }
+
+  /* ── platforma ── */
+  var standalone = window.navigator.standalone === true || (!!window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  var iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var android = /Android/i.test(navigator.userAgent);
+  var pushOk = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && window.isSecureContext;
+  var swReg = null, pushKey = '', subscribed = false, appWin = null, appOrigin = '';
+
+  /** Starea notificărilor, trimisă aplicației (Profil → „Notificări pe acest dispozitiv”). */
+  function pushState() {
+    return { suportat: pushOk, permisiune: pushOk ? Notification.permission : 'unsupported', standalone: standalone,
+      ios: iOS, android: android, desktop: !iOS && !android, abonat: subscribed };
+  }
+
+  /* ── cifra: titlu, favicon, iconița aplicației ── */
+  var base = new Image(), count = 0, linked = false, lastPing = 0;
+  base.src = 'favicon-64.png';
+  function favicon(n) {
+    var link = document.getElementById('fav');
+    if (!n) { link.href = 'favicon-64.png'; return; }
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var g = c.getContext('2d');
+    if (base.complete && base.naturalWidth) g.drawImage(base, 0, 0, 64, 64);
+    var txt = n > 99 ? '99+' : String(n);
+    var r = txt.length > 2 ? 22 : 19;
+    g.beginPath(); g.arc(64 - r + 2, r - 2, r, 0, Math.PI * 2); g.fillStyle = '#E5372B'; g.fill();
+    g.lineWidth = 3; g.strokeStyle = '#FFFFFF'; g.stroke();
+    g.fillStyle = '#FFFFFF'; g.font = 'bold ' + (txt.length > 2 ? 18 : 24) + 'px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, 64 - r + 2, r - 1);
+    link.href = c.toDataURL('image/png');
+  }
+  function show(n) {
+    count = n;
+    document.title = n ? '(' + (n > 99 ? '99+' : n) + ') ' + TITLE : TITLE;
+    favicon(n);
+    try {
+      if ('setAppBadge' in navigator) { if (n) navigator.setAppBadge(n).catch(function () {}); else navigator.clearAppBadge().catch(function () {}); }
+    } catch (e) { /* fără cifră pe iconița aplicației */ }
+    // totul e citit: notificările vechi dispar (pe Android dispare și bulina de pe iconiță)
+    if (!n && swReg && swReg.getNotifications) {
+      swReg.getNotifications({ tag: 'caiet' }).then(function (list) { list.forEach(function (x) { x.close(); }); }).catch(function () {});
+    }
+  }
+  base.onload = function () { if (count) favicon(count); };
+
+  /* ── Service Worker (notificările cu aplicația închisă) ── */
+  if (pushOk) {
+    navigator.serviceWorker.register('sw.js?app=' + encodeURIComponent(APP_URL), { scope: './' })
+      .then(function () { return navigator.serviceWorker.ready; })
+      .then(function (reg) { swReg = reg; return reg.pushManager.getSubscription(); })
+      .then(function (sub) { subscribed = !!sub && Notification.permission === 'granted'; tellState(); ensurePush(false, true); })
+      .catch(function (e) { console.warn('Service Worker: ' + e); });
+  }
+
+  function b64u(s) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+    var raw = atob(s), out = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+  function sameKey(buf, key) {
+    if (!buf) return false;
+    var a = new Uint8Array(buf), b = b64u(key);
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+  /** Abonarea (cu cheia serverului) și trimiterea adresei către aplicație, care o leagă de cont. */
+  // announce: trimitem adresa aplicației (la fiecare cheie primită = la fiecare intrare în cont); altfel doar dacă e nouă
+  var failOffered = false;
+  function ensurePush(fromClick, announce) {
+    if (!pushOk || !swReg || !pushKey || Notification.permission !== 'granted') return Promise.resolve(false);
+    var fresh = false;
+    return swReg.pushManager.getSubscription().then(function (sub) {
+      if (sub && sameKey(sub.options && sub.options.applicationServerKey, pushKey)) return sub;
+      fresh = true;
+      return (sub ? sub.unsubscribe() : Promise.resolve()).then(function () {
+        return swReg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(pushKey) });
+      });
+    }).then(function (sub) {
+      subscribed = true;
+      if (appWin && (announce || fresh || fromClick)) appWin.postMessage({ tip: 'caiet-push-abonament', endpoint: sub.endpoint, platforma: (iOS ? 'ios' : android ? 'android' : 'desktop') + (standalone ? '-app' : '') }, appOrigin);
+      tellState();
+      return true;
+    }).catch(function (e) {
+      console.warn('Abonare notificări: ' + e);
+      subscribed = false; tellState();
+      if (!fromClick && !failOffered) { failOffered = true; offer(true); }   // unele sisteme cer o atingere și pentru abonare
+      return false;
+    });
+  }
+  function tellState() { if (appWin) appWin.postMessage({ tip: 'caiet-push-stare', push: pushState() }, appOrigin); }
+
+  /* ── bara „Permite” (permisiunea se poate cere doar la o atingere, în pagina de sus) ── */
+  var bar = document.getElementById('bar');
+  function offer(force) {
+    if (!pushOk || !pushKey || Notification.permission === 'denied') return;
+    if (Notification.permission === 'granted' && subscribed) return;
+    if (!force && (lsGet('caiet.badgeAsk') === '1' || !standalone)) return;   // automat doar în aplicația instalată, o singură dată
+    bar.hidden = false;
+  }
+  function hideBar() { bar.hidden = true; lsSet('caiet.badgeAsk', '1'); }
+  document.getElementById('bar-x').addEventListener('click', hideBar);
+  document.getElementById('bar-ok').addEventListener('click', function () {
+    hideBar();
+    Notification.requestPermission().then(function (p) {
+      tellState();
+      if (p === 'granted') ensurePush(true, true).then(function () { show(count); });
     }).catch(function () {});
-  // deschisă din iconița veche (aplicația instalată): nu plecăm singuri, ca omul să vadă cum o instalează din nou
-  var instalata = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-  if (instalata) { st.textContent = 'Ai deschis iconița veche. Apasă butonul, instalează Emaus de la noua adresă și șterge iconița aceasta.'; return; }
-  var gata = false;
-  function du() { if (gata) return; gata = true; location.replace(NOU); }
-  Promise.race([curat, new Promise(function (r) { setTimeout(r, 2500); })]).then(function () { setTimeout(du, 2500); });
-  setTimeout(function () { st.textContent = 'Dacă nu se deschide singură, apasă butonul de mai jos.'; }, 6000);
+  });
+
+  /* ── mesajele aplicației: doar din cadrul nostru (oricât de adânc în cadrele Google) ── */
+  function fromOurFrame(src) {
+    var w = src;
+    for (var i = 0; i < 6 && w; i++) {
+      if (w === frame.contentWindow) return true;
+      try { if (w === w.parent) return false; w = w.parent; } catch (e) { return false; }
+    }
+    return false;
+  }
+  window.addEventListener('message', function (e) {
+    if (!GOOGLE.test(e.origin) || !e.data || !fromOurFrame(e.source)) return;
+    var d = e.data;
+    if (d.tip === 'caiet-necitite') {
+      var n = Number(d.n);
+      if (!(n >= 0 && n < 100000 && Math.floor(n) === n)) return;
+      linked = true; appWin = e.source; appOrigin = e.origin;
+      show(n);
+      return;
+    }
+    if (d.tip === 'caiet-push-cheie' && typeof d.cheie === 'string' && /^[A-Za-z0-9_-]{80,100}$/.test(d.cheie)) {
+      appWin = e.source; appOrigin = e.origin; pushKey = d.cheie;
+      tellState();
+      if (pushOk && Notification.permission === 'granted') ensurePush(false, true); else setTimeout(function () { offer(false); }, 4000);
+      return;
+    }
+    if (d.tip === 'caiet-push-arata') { appWin = e.source; appOrigin = e.origin; offer(true); }
+  });
+
+  /* ── „salutul”: aplicația (adânc în cadrele Google) află că e în ramă și ce poate dispozitivul ── */
+  function ping(w, depth) {
+    try { w.postMessage({ tip: 'caiet-rama-salut', push: pushState() }, '*'); } catch (e) { /* cadru indisponibil */ }
+    if (depth >= 4) return;
+    try { for (var i = 0; i < w.frames.length; i++) ping(w.frames[i], depth + 1); } catch (e) { /* cadru indisponibil */ }
+  }
+  // des la început (până răspunde aplicația), apoi rar: aplicația se poate reîncărca în cadru (ieșire / intrare în cont)
+  setInterval(function () {
+    var now = Date.now();
+    if (!linked || now - lastPing > 20000) { ping(frame.contentWindow, 0); lastPing = now; }
+  }, 1500);
+  frame.addEventListener('load', function () { linked = false; });
+
+  /* ── plasă de siguranță: dacă aplicația nu răspunde (eroare Google în cadru, rețea), oferim reîncercarea ── */
+  var help = document.getElementById('help');
+  document.getElementById('help-open').href = APP_URL;
+  document.getElementById('help-retry').addEventListener('click', function () { help.hidden = true; frame.src = APP_URL; armHelp(); });
+  var helpTimer = null;
+  function armHelp() { clearTimeout(helpTimer); helpTimer = setTimeout(function () { if (!linked) help.hidden = false; }, 20000); }
+  armHelp();
+  window.addEventListener('message', function (e) { if (GOOGLE.test(e.origin) && e.data && e.data.tip === 'caiet-necitite') { help.hidden = true; clearTimeout(helpTimer); } });
+  // permisiunea schimbată din setări cât aplicația era în fundal
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { tellState(); ensurePush(false, false); } });
 })();
 </script>
 </body>
