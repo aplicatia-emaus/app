@@ -1,10 +1,10 @@
 /*
- * Vechea adresă a aplicației (fosta „Caiet de ucenicie”, acum Emaus: https://aplicatia-emaus-code.github.io/).
+ * Vechea adresă a aplicației (fosta „Caiet de ucenicie”, acum Emaus: https://aplicatia-emaus.github.io/app/).
  * Acest Service Worker înlocuiește pe cel vechi și se autodistruge: oprește abonamentul la notificări al vechii adrese
  * (serverul îl șterge la următoarea trimitere), apoi se dezînregistrează. Dacă mai apucă un push, anunță adresa nouă.
  */
 'use strict';
-var NOU = 'https://aplicatia-emaus-code.github.io/';
+var NOU = 'https://aplicatia-emaus.github.io/app/';
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   e.waitUntil(self.registration.pushManager.getSubscription()

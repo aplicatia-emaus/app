@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#1D2B4F">
 <meta name="robots" content="noindex">
 <title>Emaus – adresă nouă</title>
-<link rel="canonical" href="https://aplicatia-emaus-code.github.io/">
+<link rel="canonical" href="https://aplicatia-emaus.github.io/app/">
 <!--
   Vechea adresă a aplicației (fosta „Caiet de ucenicie”). Aplicația se numește acum Emaus și stă la
-  https://aplicatia-emaus-code.github.io/. Pagina aceasta:
+  https://aplicatia-emaus.github.io/app/. Pagina aceasta:
     1. oprește notificările legate de vechea adresă (altfel ar veni de două ori, după ce le pornești în Emaus);
     2. scoate vechiul Service Worker;
     3. trimite automat la noua adresă.
@@ -33,7 +33,7 @@
   <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1D2B4F"/><path d="M32 40V25" stroke="#8DBB6E" stroke-width="3.2" stroke-linecap="round"/><path d="M32 29c-7.5 0-12.5-5-12.5-12.5C27 16.5 32 21.5 32 29z" fill="#8DBB6E"/><path d="M32 24c6.5 0 12.5-4.5 12.5-12.5C37.5 11.5 32 16 32 24z" fill="#8DBB6E"/><path d="M7 37c8-3.5 17-3.5 25 2v9c-8-5.5-17-5.5-25-2z" fill="#FCFDFE"/><path d="M57 37c-8-3.5-17-3.5-25 2v9c8-5.5 17-5.5 25-2z" fill="#FCFDFE"/><path d="M30.6 48.4C27 50.8 22.6 53.2 23.4 56.7C24.2 60.2 31 60.8 33 64H47.5C45 59.2 36.6 58.1 31.6 56.2C28 54.9 31 51.9 33.4 48.4z" fill="#D9C29A"/></svg>
   <h1>Caietul de ucenicie se numește acum Emaus</h1>
   <p id="st">Te ducem la noua adresă…</p>
-  <a class="btn" href="https://aplicatia-emaus-code.github.io/">Deschide Emaus</a>
+  <a class="btn" href="https://aplicatia-emaus.github.io/app/">Deschide Emaus</a>
   <div class="card">
     <p><strong>Contul și tot ce ai scris rămân.</strong> Intri cu aceleași date.</p>
     <p>Dacă aveai aplicația pe ecranul telefonului, adaug-o din nou de la noua adresă (Android: meniul ⋮ → „Instalează aplicația”; iPhone: Distribuie → „Adaugă pe ecranul principal”), apoi șterge iconița veche. Notificările le pornești din nou în Emaus.</p>
@@ -42,7 +42,7 @@
 <script>
 (function () {
   'use strict';
-  var NOU = 'https://aplicatia-emaus-code.github.io/';
+  var NOU = 'https://aplicatia-emaus.github.io/app/';
   var st = document.getElementById('st');
   // 1–2: oprim abonamentul push al vechii adrese și scoatem Service Worker-ul ei (serverul șterge singur abonamentele moarte)
   var curat = !('serviceWorker' in navigator) ? Promise.resolve() :
