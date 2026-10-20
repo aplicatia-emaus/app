@@ -1,7 +1,7 @@
 # Radio Betel: două canale (Muzică și Predici), cost zero
 
 ## Cum funcționează
-- **Pagina radioului** (`radio/index.html`) este statică. Stă în același depozit GitHub Pages ca pagina-ramă a Caietului: `https://<utilizator>.github.io/caiet/radio/`.
+- **Pagina radioului** (`radio/index.html`) este statică. Stă în același depozit GitHub Pages ca pagina-ramă a aplicației Emaus: `https://aplicatia-emaus-code.github.io/radio/`.
 - **Fișierele audio (MP3)** sunt găzduite gratuit pe **Internet Archive** (archive.org), fără limită de trafic și fără legătură cu Google Drive sau cu foile de calcul ale aplicației.
 - **Playlisturile** sunt două fișiere text: `radio/muzica.json` și `radio/predici.json`. Le modifică scriptul de publicare sau le poți edita direct pe GitHub.
 - **„Radioul”:** poziția de redare se calculează din ceas. Toți ascultătorii aud aceeași piesă în același moment, ca la un post de radio, fără server de streaming.
@@ -51,7 +51,7 @@ python radio/unelte/publica.py muzica "Mare esti Tu.wav" --titlu "Mare ești Tu"
 În radio și în aplicație apare „Tineretul Betel · cover”, iar dedesubt „Autori: … · Traducerea: … · Original: …”. Aceleași date ajung și în descrierea fișierului de pe archive.org.
 
 ## În Caietul de ucenicie
-Varianta compactă a playerului: `https://<utilizator>.github.io/caiet/radio/?compact=1&canal=predici`. Integrarea în aplicație (bară de redare care rămâne activă cât navighezi) se face în pasul următor.
+Varianta compactă a playerului: `https://aplicatia-emaus-code.github.io/radio/?compact=1&canal=predici`. Integrarea în aplicație (bară de redare care rămâne activă cât navighezi) se face în pasul următor.
 
 ## De reținut
 - **Live-ul de pe YouTube nu se poate prelua în radio.** Regulile YouTube interzic descărcarea, separarea sunetului de imagine și redarea în fundal.

@@ -6,16 +6,16 @@
   <meta name="theme-color" content="#1D2B4F">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Caiet de ucenicie">
+  <meta name="apple-mobile-web-app-title" content="Emaus">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Caiet de ucenicie</title>
+  <title>Emaus</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" id="fav" type="image/png" href="favicon-64.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <!--
-    Pagina-ramă a aplicației „Caiet de ucenicie” (Biserica Betel Constanța).
+    Pagina-ramă a aplicației „Emaus” (Biserica Betel Constanța).
     Deschide aplicația Google Apps Script pe tot ecranul și afișează numărul noutăților (mesaje, cereri, invitații):
-      - în titlul filei: „(3) Caiet de ucenicie”;
+      - în titlul filei: „(3) Emaus”;
       - pe favicon (iconița filei), cu o bulină roșie;
       - pe iconița aplicației instalate (setAppBadge): iPhone / iPad 16.4+ cu notificări permise, Windows / macOS;
       - prin notificări push (sw.js), și cu aplicația închisă: pe iPhone cifră pe iconiță, pe Android bulină pe iconiță.
@@ -39,7 +39,7 @@
   </style>
 </head>
 <body>
-  <iframe id="app" title="Caiet de ucenicie" allow="geolocation; clipboard-read; clipboard-write; web-share; fullscreen; autoplay"></iframe>
+  <iframe id="app" title="Emaus" allow="geolocation; clipboard-read; clipboard-write; web-share; fullscreen; autoplay"></iframe>
   <div id="bar" role="region" aria-label="Notificări" hidden>
     <p>Vrei o notificare și cifra pe iconiță când ai mesaje noi?</p>
     <button class="ok" type="button" id="bar-ok">Permite</button>
@@ -57,13 +57,13 @@
 (function () {
   'use strict';
   // ► Adresa aplicației (linkul /exec). Înlocuiește cu linkul vostru:
-  var APP_URL = 'https://script.google.com/macros/s/AKfycbxs0Pn6GEzt_X5OO0sMk7YgncsEDSOFOVnO0tKusO3Vbn_FVTLrOSwgsWYaq_Usg4EF/exec';
+  var APP_URL = 'https://script.google.com/macros/s/INLOCUIESTE_CU_ID-UL_IMPLEMENTARII/exec';
 
   // Linkul copiat din bara browserului poate conține contul Google („/macros/u/1/s/…”): îl curățăm.
   // Cu implementarea „Oricine” (fără cont Google), adresa curată se deschide pe orice telefon, cu oricâte conturi.
   APP_URL = APP_URL.replace(/\/macros\/u\/\d+\/s\//, '/macros/s/');
 
-  var TITLE = 'Caiet de ucenicie';
+  var TITLE = 'Emaus';
   var GOOGLE = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;   // de aici vine aplicația (cadrul Apps Script)
   var frame = document.getElementById('app');
   frame.src = APP_URL;

@@ -1,5 +1,5 @@
 /*
- * Service Worker-ul ramei „Caiet de ucenicie” (GitHub Pages).
+ * Service Worker-ul ramei „Emaus” (GitHub Pages).
  * Se trezește la fiecare notificare push trimisă de server (Push.gs). Push-ul nu are conținut: cerem starea de la
  * aplicație (doGet ?push=<hash-ul abonamentului>), afișăm notificarea și punem cifra pe iconiță.
  *   - iPhone / iPad (aplicația pe ecranul principal) și Windows / macOS: cifră pe iconiță (setAppBadge);
@@ -45,7 +45,7 @@ self.addEventListener('push', function (e) {
   e.waitUntil(fetchState().then(function (st) {
     var ok = !!(st && st.ok);
     var n = ok ? Math.max(0, Math.min(99999, Number(st.n) || 0)) : null;
-    var title = ok && st.titlu ? String(st.titlu).slice(0, 80) : 'Caiet de ucenicie';
+    var title = ok && st.titlu ? String(st.titlu).slice(0, 80) : 'Emaus';
     var body = ok && st.text ? String(st.text).slice(0, 240) : 'Ai noutăți. Deschide aplicația ca să le vezi.';
     // dispozitivul nu mai e legat de un cont (ieșire din cont): nu mai punem cifră
     var badge = st && st.sters ? setBadge(0) : setBadge(n);
