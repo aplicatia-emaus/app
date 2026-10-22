@@ -66,7 +66,10 @@
   var TITLE = 'Emaus';
   var GOOGLE = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;   // de aici vine aplicația (cadrul Apps Script)
   var frame = document.getElementById('app');
-  frame.src = APP_URL;
+  // Linkul de invitație (…/?inv=TOKEN) se transmite aplicației, apoi dispare din bara de adrese (și din aplicația instalată)
+  var INV = (/[?&]inv=([A-Za-z0-9_-]{22})(?:&|#|$)/.exec(location.search) || [])[1] || '';
+  frame.src = INV ? APP_URL + (APP_URL.indexOf('?') >= 0 ? '&' : '?') + 'inv=' + INV : APP_URL;
+  if (INV && history.replaceState) { try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) { /* adresa rămâne */ } }
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* stocare indisponibilă */ } }
