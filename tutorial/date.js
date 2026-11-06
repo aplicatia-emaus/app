@@ -50,9 +50,19 @@ window.TUT = {
         note: ['Întrebarea „Ne cunoaștem?” apare după 2 săptămâni.', 'Conversația e doar a voastră: nici administratorii, nici coordonatorii nu o citesc.'],
         sfaturi: ['„Ceva nu e în regulă” ajunge doar la coordonator. Poți încheia oricând, fără explicații.'] }
     ] },
-    { id: 'evanghelizare', titlu: 'Evanghelizare', slides: [
-      { img: 'evg-1', titlu: 'Cursuri și instrumente', text: ['Cursuri scurte, pe lecții, cu certificat de absolvire, și instrumente pentru a vorbi altora despre Hristos.'],
-        sfaturi: ['Progresul se salvează în cont; certificatul îl descarci ca PDF.'] }
+    { id: 'evanghelizare', titlu: 'Evanghelizare (Mărturie)', slides: [
+      { img: 'evg-1', titlu: 'Cursurile', text: ['Ucenicie → Mărturie → Cursuri: cursuri scurte, pe lecții, pentru a vorbi altora despre Hristos. Fiecare are sursa materialelor și certificat de absolvire.'],
+        sfaturi: ['Progresul se salvează în cont; poți continua oricând de unde ai rămas.'] },
+      { img: 'evg-2', titlu: 'Un curs', text: ['Lecțiile se parcurg pe rând. La final primești certificatul, cu dată și număr, pe care îl poți descărca ca PDF.'],
+        sfaturi: ['Unele cursuri au și un clip de instruire, care se deschide direct în aplicație sau în YouTube.'] },
+      { img: 'evg-3', titlu: 'Instrumentele', text: ['Unelte pentru evanghelizarea pe teren: fișa de diagnoză, schița Evangheliei („Mâna EE”) și chestionarul online.'] },
+      { img: 'evg-4', titlu: 'Fișa de diagnoză și planificare', text: ['Pentru fiecare om pentru care te rogi notezi nevoile de bază, receptivitatea față de Evanghelie (Scala Engel) și planul tău de acțiune.'],
+        sfaturi: ['Fișele le vezi doar tu. Folosește un prenume sau inițiale și nu include date personale ale altora fără acordul lor.'] },
+      { img: 'evg-5', titlu: 'Schița Evangheliei: Mâna EE', text: ['Cerul, Omul, Dumnezeu, Cristos, Credința: cele cinci degete ale mâinii. Atinge un deget sau parcurge pas cu pas, ca fișă rapidă înainte de o discuție.'] },
+      { img: 'evg-6', titlu: 'Chestionarul online', text: ['Cinci întrebări care deschid o discuție despre viață, Dumnezeu și veșnicie.'],
+        sfaturi: ['„Arată codul QR”: persoana scanează codul și completează singură, fără aplicație și fără cont.', '„Completez eu”: scrii tu răspunsurile în timp ce discutați.', '„Intervievările mele” păstrează chestionarele completate de tine.'] },
+      { img: 'evg-7', titlu: 'Chestionarul, pas cu pas', text: ['Te prezinți, întrebi dacă persoana vrea să răspundă și notezi răspunsurile. La final, datele de contact sunt opționale.'],
+        sfaturi: ['Bifa de acord pentru a fi contactat i-o citești persoanei și o bifezi doar dacă spune „da”. Fără acord nu se păstrează emailul și telefonul.'] }
     ] },
     { id: 'calendar', titlu: 'Calendar', slides: [
       { img: 'cal-1', titlu: 'Agenda zilei', text: ['Activitățile bisericii apar singure; adaugi și activitățile tale, cu reminder pe telefon.'],
@@ -76,12 +86,26 @@ window.TUT = {
     ] },
     { id: 'resurse', titlu: 'Resurse', slides: [
       { img: 'res-1', titlu: 'Biblioteca', text: ['Cărți creștine de citit sau de ascultat în aplicație. Progresul se salvează; la final lași un gând.'],
-        note: ['Resursele: Biblioteca, Cântări, Radio și Jocuri. Butonul Resurse redeschide ultima folosită.'],
-        sfaturi: ['Jocurile biblice au regulile explicate la începutul fiecărui joc.'] },
+        note: ['Resursele: Biblioteca, Cântări, Radio și Jocuri. Butonul Resurse redeschide ultima folosită.'] },
       { img: 'res-2', titlu: 'Cântări', text: ['Cântările bisericii, cu versuri și acorduri. Caută după număr, titlu sau versuri.'],
         sfaturi: ['„Liste de proiecție”: pregătește lista pentru un eveniment și împărtășește-o cu echipa.'] },
       { img: 'res-3', titlu: 'Radio', text: ['Radio Betel (muzică și predici) și posturile creștine din Constanța. Radioul merge mai departe când navighezi prin aplicație.'],
         sfaturi: ['Când biserica transmite live, aplicația îți arată transmisiunea.'] }
+    ] },
+    { id: 'jocuri', titlu: 'Jocuri biblice', slides: [
+      { img: 'joc-1', titlu: 'Jocurile', text: ['Resurse → Jocuri: jocuri biblice pentru toate vârstele. Strângi puncte (XP) și urci în trepte.'],
+        sfaturi: ['Limita zilnică de puncte ne ajută să jucăm puțin în fiecare zi, nu mult într-una singură.'] },
+      { img: 'joc-2', titlu: 'Știi și mergi mai departe', text: ['Trei niveluri, câte zece întrebări, trei vieți și 30 de secunde pentru fiecare întrebare. Cu cât răspunzi mai repede, cu atât primești mai multe puncte.'],
+        sfaturi: ['50/50 și indiciul se pot folosi o dată pe nivel, dar reduc punctele.'] },
+      { img: 'joc-3', titlu: 'Camera evadării', text: ['În fiecare misiune, un cufăr vechi are șase lacăte colorate. Fiecare lacăt se deschide cu o ghicitoare din relatarea biblică.'],
+        sfaturi: ['Misiunile se deschid una după alta. Nivelul 1 e fără cronometru; nivelurile 2 și 3 au 30 de minute.'] },
+      { img: 'joc-4', titlu: 'Cufărul s-a deschis', text: ['După ultimul lacăt, cufărul se deschide și primești mesajul misiunii, cu versetele lui.'] },
+      { img: 'joc-5', titlu: 'Înapoi în timp', text: ['Tema anului: Regii și profeții. Sulul cronicilor te poartă în vremea regilor lui Israel: șase ghicitori, un cod și testul cronicii, contra cronometru.'],
+        sfaturi: ['Trei episoade: Regatul unit, Regatul lui Israel și Regatul lui Iuda. Fiecare se deschide după cel anterior.'] },
+      { img: 'joc-6', titlu: 'Pierdut și găsit', text: ['Luca 15: cauți oile rătăcite, rezolvi cinci ghicitori și deschizi lacătul staulului, în 30 de minute.'],
+        sfaturi: ['Acasă joci singur. La grupă, liderul îți dă un cod, iar la final afli unde te așteaptă surpriza grupei.', 'Liderii pornesc sesiuni de grup din „Gestionează sesiunile”.'] },
+      { img: 'joc-7', titlu: 'Insigne și clasament', text: ['Insignele se obțin jucând: prima rundă, runde perfecte, zile la rând, misiuni terminate.'],
+        sfaturi: ['În clasament apari cu un nume biblic, nu cu numele tău.'] }
     ] },
     { id: 'profil', titlu: 'Profil și confidențialitate', slides: [
       { img: 'profil-1', titlu: 'Preferințele tale', text: ['Datele tale, tema (luminos sau întunecat), mărimea textului și pictogramele de pe Acasă.'],
