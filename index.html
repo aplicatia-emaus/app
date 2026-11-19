@@ -28,22 +28,43 @@
   <style>
     html, body { margin: 0; height: 100%; background: #1D2B4F; overflow: hidden; }
     #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #E8ECF2; }
-    #bar { position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 2; display: flex; align-items: center; gap: 8px;
-      max-width: 560px; margin: 0 auto;
+    /* barele de jos (notificări, instalare) stau una sub alta, peste aplicație */
+    #dock { position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 2; display: flex; flex-direction: column; gap: 8px;
+      max-width: 560px; margin: 0 auto; pointer-events: none; }
+    #dock > * { pointer-events: auto; }
+    #bar { display: flex; align-items: center; gap: 8px;
       padding: 10px 12px; border-radius: 14px; background: #1D2B4F; color: #fff; font: 15px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(0,0,0,.3); }
     #bar p { margin: 0; flex: 1; }
     #bar button { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; font: inherit; font-weight: 700; cursor: pointer; }
     #bar .ok { background: #8DBB6E; color: #10200A; }
     #bar .x { background: transparent; color: #fff; padding: 0 10px; }
+    #inst { display: flex; align-items: center; gap: 10px; padding: 10px 8px 10px 10px; border-radius: 14px; background: #FCFDFE; color: #1D2B4F;
+      font: 15px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+    #inst img { flex: none; width: 44px; height: 44px; border-radius: 10px; }
+    #inst .t { flex: 1; min-width: 0; }
+    #inst strong { display: block; font-size: 16px; }
+    #inst span { display: block; color: #4A5672; font-size: 14px; }
+    #inst button { flex: none; min-height: 44px; border: 0; border-radius: 999px; font: inherit; font-weight: 700; cursor: pointer; }
+    #inst-ok { padding: 0 16px; background: #1D2B4F; color: #fff; }
+    #inst-x { min-width: 44px; padding: 0 10px; background: transparent; color: #4A5672; }
+    #inst button:focus-visible, #bar button:focus-visible { outline: 3px solid #8DBB6E; outline-offset: 2px; }
     [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <iframe id="app" title="Emaus" allow="geolocation; clipboard-read; clipboard-write; web-share; fullscreen; autoplay"></iframe>
-  <div id="bar" role="region" aria-label="Notificări" hidden>
-    <p>Vrei o notificare și cifra pe iconiță când ai mesaje noi?</p>
-    <button class="ok" type="button" id="bar-ok">Permite</button>
-    <button class="x" type="button" id="bar-x" aria-label="Nu acum">✕</button>
+  <div id="dock">
+    <div id="bar" role="region" aria-label="Notificări" hidden>
+      <p>Vrei o notificare și cifra pe iconiță când ai mesaje noi?</p>
+      <button class="ok" type="button" id="bar-ok">Permite</button>
+      <button class="x" type="button" id="bar-x" aria-label="Nu acum">✕</button>
+    </div>
+    <div id="inst" role="region" aria-label="Instalează aplicația" hidden>
+      <img src="icon-192.png" alt="">
+      <div class="t"><strong>Instalează Emaus</strong><span id="inst-txt">Pe ecranul principal, ca o aplicație.</span></div>
+      <button type="button" id="inst-ok">Instalează</button>
+      <button type="button" id="inst-x" aria-label="Nu acum">✕</button>
+    </div>
   </div>
   <div id="help" role="alert" hidden style="position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top, 0px));z-index:3;max-width:560px;margin:0 auto;padding:12px 14px;border-radius:14px;background:#fff;color:#1D2B4F;font:15px/1.4 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.3)">
     <p style="margin:0 0 10px">Aplicația se încarcă greu sau Google a afișat o eroare.</p>
@@ -118,14 +139,50 @@
   }
   base.onload = function () { if (count) favicon(count); };
 
-  /* ── Service Worker (notificările cu aplicația închisă) ── */
-  if (pushOk) {
-    navigator.serviceWorker.register('sw.js?app=' + encodeURIComponent(APP_URL), { scope: './' })
+  /* ── Service Worker: instalarea aplicației (Chrome / Edge) și notificările cu aplicația închisă ── */
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    // updateViaCache 'none': sw.js se verifică mereu pe server, deci o versiune nouă ajunge la prima deschidere
+    navigator.serviceWorker.register('sw.js?app=' + encodeURIComponent(APP_URL), { scope: './', updateViaCache: 'none' })
       .then(function () { return navigator.serviceWorker.ready; })
-      .then(function (reg) { swReg = reg; return reg.pushManager.getSubscription(); })
-      .then(function (sub) { subscribed = !!sub && Notification.permission === 'granted'; tellState(); ensurePush(false, true); })
+      .then(function (reg) {
+        if (!pushOk) return;
+        swReg = reg;
+        return reg.pushManager.getSubscription().then(function (sub) { subscribed = !!sub && Notification.permission === 'granted'; tellState(); ensurePush(false, true); });
+      })
       .catch(function (e) { console.warn('Service Worker: ' + e); });
   }
+
+  /* ── bara „Instalează Emaus” (doar în browser, nu în aplicația deja instalată) ──
+   * Chrome / Edge (Android, Windows, macOS): evenimentul beforeinstallprompt, păstrat și folosit la „Instalează”.
+   * iPhone / iPad: Safari nu are acest eveniment; bara arată pașii din meniul „Distribuie”.
+   * ✕ = nu mai apare 14 zile; „Instalează” fără finalizare = 7 zile (termenul în localStorage; fără localStorage, doar în sesiune). */
+  var inst = document.getElementById('inst'), instOk = document.getElementById('inst-ok'), instEvt = null;
+  var INST_KEY = 'emaus.instalare.panaLa', ZI = 86400000;
+  function instAmanat() { var t = Number(lsGet(INST_KEY)); return t > Date.now(); }
+  function instAmana(zile) { lsSet(INST_KEY, String(Date.now() + zile * ZI)); }
+  function instAscunde() { inst.hidden = true; }
+  function instArata(ios) {
+    if (standalone || instAmanat()) return;
+    instOk.hidden = !!ios;
+    if (ios) document.getElementById('inst-txt').textContent = 'Apasă «Distribuie», apoi «Adaugă la ecranul principal».';
+    inst.hidden = false;
+  }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();                                  // fără mini-bara browserului: folosim bara noastră
+    instEvt = e;
+    instArata(false);
+  });
+  instOk.addEventListener('click', function () {
+    if (!instEvt) { instAscunde(); return; }
+    var ev = instEvt;
+    instEvt = null;                                      // evenimentul se poate folosi o singură dată
+    instAscunde();
+    ev.prompt();
+    ev.userChoice.then(function (r) { if (!r || r.outcome !== 'accepted') instAmana(7); }).catch(function () { instAmana(7); });
+  });
+  document.getElementById('inst-x').addEventListener('click', function () { instAmana(14); instAscunde(); });
+  window.addEventListener('appinstalled', function () { instEvt = null; instAscunde(); });
+  if (iOS && !standalone) setTimeout(function () { instArata(true); }, 2500);
 
   function b64u(s) {
     s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
