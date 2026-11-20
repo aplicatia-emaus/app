@@ -3,5 +3,22 @@
   "descriere": "Cântări de laudă și închinare ale Bisericii Betel Constanța.",
   "youtube": "https://www.youtube.com/",
   "start": "2026-01-01T00:00:00Z",
-  "piese": []
+  "piese": [
+    {
+      "titlu": "Voi canta bunatatea Ta & Atunci iti cant",
+      "autor": "Grupul de laudă Betel",
+      "data": "2026-10-11",
+      "url": "https://archive.org/download/radio-betel-muzica-2026-10-11-voi-canta-bunatatea-ta-atunci-iti-cant/2026-10-11-voi-canta-bunatatea-ta-atunci-iti-cant.mp3",
+      "durata": 237.0,
+      "autori": "Tradițional"
+    },
+    {
+      "titlu": "Privind spre a Ta bunatate",
+      "autor": "Grupul de laudă Betel",
+      "data": "2026-10-11",
+      "url": "https://archive.org/download/radio-betel-muzica-2026-10-11-privind-spre-a-ta-bunatate/2026-10-11-privind-spre-a-ta-bunatate.mp3",
+      "durata": 340.0,
+      "autori": "Tradițional"
+    }
+  ]
 }
