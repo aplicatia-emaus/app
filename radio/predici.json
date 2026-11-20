@@ -3,5 +3,14 @@
   "descriere": "Predicile și mesajele biblice de la Biserica Betel Constanța.",
   "youtube": "https://www.youtube.com/",
   "start": "2026-01-01T00:00:00Z",
-  "piese": []
+  "piese": [
+    {
+      "titlu": "Un loc mai bun pentru Dumnezeu",
+      "autor": "Pastor Lucian Rotaru",
+      "data": "2026-11-15",
+      "url": "https://archive.org/download/radio-betel-predici-2026-11-15-un-loc-mai-bun-pentru-dumnezeu/2026-11-15-un-loc-mai-bun-pentru-dumnezeu.mp3",
+      "durata": 3045.9,
+      "sursa": "https://youtu.be/m-n9_iRzYfM"
+    }
+  ]
 }
